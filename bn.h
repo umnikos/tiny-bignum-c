@@ -21,8 +21,21 @@ There may well be room for performance-optimizations and improvements.
 */
 
 #include <stdint.h>
-#include <assert.h>
 
+#ifndef BN_NO_ASSERT
+  #include <assert.h>
+  /* Custom assert macro - easy to disable */
+  #define require(p, msg) assert(p && msg)
+#else
+  #define require(p, msg)
+#endif
+
+#ifndef BN_NO_STDIO
+  #include <stdio.h>
+#else
+  #define sprintf(a,b,c)
+  #define sscanf(a,b,c)
+#endif
 
 /* This macro defines the word size in bytes of the array that constitues the big-number data structure. */
 #ifndef WORD_SIZE
@@ -69,11 +82,6 @@ There may well be room for performance-optimizations and improvements.
 #ifndef DTYPE
   #error DTYPE must be defined to uint8_t, uint16_t uint32_t or whatever
 #endif
-
-
-/* Custom assert macro - easy to disable */
-#define require(p, msg) assert(p && msg)
-
 
 /* Data-holding structure: array of DTYPEs */
 struct bn
